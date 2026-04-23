@@ -3,7 +3,7 @@
 
   "editor.fontFamily": "JetBrains Mono, Menlo, Monaco, monospace",
   "editor.lineHeight": 1.6,
-  "terminal.integrated.fontFamily": "JetBrains Mono, Menlo, Monaco, monospace",
+  "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font, JetBrains Mono, Menlo, Monaco, monospace",
   "window.zoomLevel": 2,
   "window.titleBarStyle": "custom",
 
@@ -12,20 +12,20 @@
 
   "workbench.colorTheme": "Default Dark Modern",
   "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#6890D8",
+    "titleBar.activeBackground": "#5998DD",
     "titleBar.activeForeground": "#FFFFFF",
-    "titleBar.inactiveBackground": "#5A7DC0",
-    "titleBar.inactiveForeground": "#FFFFFF",
+    "titleBar.inactiveBackground": "#5998DD",
+    "titleBar.inactiveForeground": "#E8E9EB",
 
-    "activityBar.background": "#489850",
+    "activityBar.background": "#2A9C4F",
     "activityBar.foreground": "#FFFFFF",
-    "activityBar.inactiveForeground": "#D0E8D2",
+    "activityBar.inactiveForeground": "#C0E8DB",
     "activityBar.activeBorder": "#FFFFFF",
-    "activityBarBadge.background": "#C06838",
+    "activityBarBadge.background": "#D26728",
     "activityBarBadge.foreground": "#FFFFFF",
 
-    "statusBar.background": "#C06838",
+    "statusBar.background": "#D26728",
     "statusBar.foreground": "#FFFFFF",
-    "statusBar.noFolderBackground": "#C06838"
+    "statusBar.noFolderBackground": "#D26728"
   }
 }
