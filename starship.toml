@@ -1,0 +1,82 @@
+format = """
+[░▒▓](#5998DD)\
+[  ](bg:#5998DD fg:#E8E9EB)\
+$username$hostname\
+[](fg:#5998DD bg:#2A9C4F)\
+$directory\
+[](fg:#2A9C4F bg:#A4CC2D)\
+$git_branch\
+$git_status\
+[](fg:#A4CC2D bg:#D26728)\
+$nodejs\
+$rust\
+$golang\
+$php\
+$time$cmd_duration\
+[](fg:#D26728)\
+\n$character"""
+
+[directory]
+style = "fg:#E8E9EB bg:#2A9C4F"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music"     = " "
+"Pictures"  = " "
+
+[git_branch]
+symbol = ""
+style  = "bg:#A4CC2D"
+format = '[[ $symbol $branch ](fg:#010F0E bg:#A4CC2D)]($style)'
+
+[git_status]
+style  = "bg:#A4CC2D"
+format = '[[($all_status$ahead_behind )](fg:#010F0E bg:#A4CC2D)]($style)'
+
+[nodejs]
+symbol = ""
+style  = "bg:#D26728"
+format = '[[ $symbol ($version) ](fg:#010F0E bg:#D26728)]($style)'
+
+[rust]
+symbol = ""
+style  = "bg:#D26728"
+format = '[[ $symbol ($version) ](fg:#010F0E bg:#D26728)]($style)'
+
+[golang]
+symbol = ""
+style  = "bg:#D26728"
+format = '[[ $symbol ($version) ](fg:#010F0E bg:#D26728)]($style)'
+
+[php]
+symbol = ""
+style  = "bg:#D26728"
+format = '[[ $symbol ($version) ](fg:#010F0E bg:#D26728)]($style)'
+
+[time]
+disabled    = false
+time_format = "%R"
+style  = "bg:#D26728"
+format = '[[ $time ](fg:#010F0E bg:#D26728)]($style)'
+
+[cmd_duration]
+min_time = 2000
+style  = "bg:#D26728"
+format = '[[ $duration ](fg:#010F0E bg:#D26728)]($style)'
+
+# === user + SSH lock in the Opal Blue tile ===
+[username]
+show_always = true
+style_user = "bold fg:#E8E9EB bg:#5998DD"
+style_root = "bold fg:#E8E9EB bg:#5998DD"
+format = "[ $user]($style)"
+
+[hostname]
+ssh_only = true
+ssh_symbol = "🔒"
+style = "bold fg:#E8E9EB bg:#5998DD"
+format = "[ $ssh_symbol]($style)"
