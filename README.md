@@ -27,11 +27,25 @@ Open a new terminal to see it.
 
 ### 2. VS Code chrome (per project)
 
+Copy (decoupled — template edits don't propagate):
+
 ```bash
 cd /path/to/your/project
 mkdir -p .vscode
 cp <this-repo>/settings.json <this-repo>/extensions.json .vscode/
 ```
+
+Or symlink (template edits propagate to every linked project):
+
+```bash
+TEMPLATE=~/workspace/sima-neat/vscode-template
+cd /path/to/your/project
+mkdir -p .vscode
+ln -sf "$TEMPLATE/settings.json"   .vscode/settings.json
+ln -sf "$TEMPLATE/extensions.json" .vscode/extensions.json
+```
+
+If the project repo doesn't already ignore `.vscode/`, add it — absolute-path symlinks break for anyone else.
 
 Then **`Cmd+Q` and reopen VS Code** — `window.titleBarStyle` requires a full app restart the first time. After that, tweaks only need `Developer: Reload Window`.
 
