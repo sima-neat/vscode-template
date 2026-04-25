@@ -1,0 +1,29 @@
+{
+  "fonts": [
+    {
+      "id": "sima-icons",
+      "src": [
+        {
+          "path": "../fonts/sima-icons.woff",
+          "format": "woff"
+        }
+      ],
+      "weight": "normal",
+      "style": "normal"
+    }
+  ],
+  "iconDefinitions": {
+    "sima-logo": {
+      "fontCharacter": "\\f101",
+      "fontId": "sima-icons"
+    },
+    "accounts-view-bar-icon": {
+      "fontCharacter": "\\f101",
+      "fontId": "sima-icons"
+    },
+    "remote": {
+      "fontCharacter": "\\f101",
+      "fontId": "sima-icons"
+    }
+  }
+}

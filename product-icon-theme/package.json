@@ -1,0 +1,34 @@
+{
+  "name": "sima-palette-neat-product-icons",
+  "displayName": "SiMa.ai Palette Neat Product Icons",
+  "description": "Product icon theme for SiMa.ai Palette Neat.",
+  "version": "0.1.0",
+  "publisher": "sima-ai",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "extensionKind": [
+    "ui"
+  ],
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "productIconThemes": [
+      {
+        "id": "sima-palette-neat-icons",
+        "label": "SiMa.ai Palette Neat Icons",
+        "path": "./themes/sima-palette-neat-product-icon-theme.json"
+      }
+    ],
+    "icons": {
+      "sima-logo": {
+        "description": "SiMa.ai logo mark.",
+        "default": {
+          "fontPath": "./fonts/sima-icons.woff",
+          "fontCharacter": "\\f101"
+        }
+      }
+    }
+  }
+}
