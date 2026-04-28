@@ -108,42 +108,56 @@ function Get-CodeUserDir {
 function Install-ElxrAttachConfig {
   $userDir = Get-CodeUserDir
   $imageConfigDir = Join-Path $userDir "globalStorage\ms-vscode-remote.remote-containers\imageConfigs"
+  $nameConfigDir = Join-Path $userDir "globalStorage\ms-vscode-remote.remote-containers\nameConfigs"
   $imageConfigPath = Join-Path $imageConfigDir $ImageConfigName
+  $nameConfigPath = Join-Path $nameConfigDir "ghcr.io-sima-neat-elxr-latest.json"
 
   New-Item -ItemType Directory -Force -Path $imageConfigDir | Out-Null
+  New-Item -ItemType Directory -Force -Path $nameConfigDir | Out-Null
 
   Write-Step "Registering Palette Neat for attached container $ImageRef..."
 
   $template = Get-Content -Raw $TemplatePath | ConvertFrom-Json
-  if (Test-Path $imageConfigPath) {
-    $target = Get-Content -Raw $imageConfigPath | ConvertFrom-Json
-  } else {
-    $target = [PSCustomObject]@{
-      workspaceFolder = "/home/manuel.roldan"
-    }
-  }
 
-  Ensure-ObjectProperty -Object $target -Name "workspaceFolder" -Value "/home/manuel.roldan"
-  Ensure-ObjectProperty -Object $target -Name "customizations" -Value ([PSCustomObject]@{})
-  Ensure-ObjectProperty -Object $target.customizations -Name "vscode" -Value ([PSCustomObject]@{})
-  Ensure-ObjectProperty -Object $target.customizations.vscode -Name "settings" -Value ([PSCustomObject]@{})
-  Ensure-ObjectProperty -Object $target.customizations.vscode -Name "extensions" -Value @()
-
-  foreach ($setting in $template.customizations.vscode.settings.PSObject.Properties) {
-    if ($target.customizations.vscode.settings.PSObject.Properties[$setting.Name]) {
-      $target.customizations.vscode.settings.PSObject.Properties[$setting.Name].Value = $setting.Value
+  foreach ($configPath in @($imageConfigPath, $nameConfigPath)) {
+    if (Test-Path $configPath) {
+      $target = Get-Content -Raw $configPath | ConvertFrom-Json
     } else {
-      $target.customizations.vscode.settings | Add-Member -MemberType NoteProperty -Name $setting.Name -Value $setting.Value
+      $target = [PSCustomObject]@{ workspaceFolder = "/home/manuel.roldan" }
     }
+
+    Ensure-ObjectProperty -Object $target -Name "workspaceFolder" -Value "/home/manuel.roldan"
+    Ensure-ObjectProperty -Object $target -Name "settings" -Value ([PSCustomObject]@{})
+    Ensure-ObjectProperty -Object $target -Name "extensions" -Value @()
+    Ensure-ObjectProperty -Object $target -Name "customizations" -Value ([PSCustomObject]@{})
+    Ensure-ObjectProperty -Object $target.customizations -Name "vscode" -Value ([PSCustomObject]@{})
+    Ensure-ObjectProperty -Object $target.customizations.vscode -Name "settings" -Value ([PSCustomObject]@{})
+    Ensure-ObjectProperty -Object $target.customizations.vscode -Name "extensions" -Value @()
+
+    foreach ($setting in $template.customizations.vscode.settings.PSObject.Properties) {
+      foreach ($settingsObject in @($target.settings, $target.customizations.vscode.settings)) {
+        if ($settingsObject.PSObject.Properties[$setting.Name]) {
+          $settingsObject.PSObject.Properties[$setting.Name].Value = $setting.Value
+        } else {
+          $settingsObject | Add-Member -MemberType NoteProperty -Name $setting.Name -Value $setting.Value
+        }
+      }
+    }
+
+    $extensions = @()
+    $extensions += @($target.extensions)
+    $extensions += @($template.customizations.vscode.extensions)
+    $extensions += "sima-ai.sima-palette-neat-product-icons"
+    $target.extensions = @($extensions | Where-Object { $_ } | Select-Object -Unique)
+
+    $customExtensions = @()
+    $customExtensions += @($target.customizations.vscode.extensions)
+    $customExtensions += @($template.customizations.vscode.extensions)
+    $customExtensions += "sima-ai.sima-palette-neat-product-icons"
+    $target.customizations.vscode.extensions = @($customExtensions | Where-Object { $_ } | Select-Object -Unique)
+
+    $target | ConvertTo-Json -Depth 100 | Set-Content -Encoding UTF8 $configPath
   }
-
-  $extensions = @()
-  $extensions += @($target.customizations.vscode.extensions)
-  $extensions += @($template.customizations.vscode.extensions)
-  $extensions += "sima-ai.sima-palette-neat-product-icons"
-  $target.customizations.vscode.extensions = @($extensions | Where-Object { $_ } | Select-Object -Unique)
-
-  $target | ConvertTo-Json -Depth 100 | Set-Content -Encoding UTF8 $imageConfigPath
 }
 
 function Install-TerminalExtras {

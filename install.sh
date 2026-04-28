@@ -170,42 +170,54 @@ install_elxr_attach_config() {
   local user_dir
   user_dir="$(code_user_dir)"
   local image_config_dir="$user_dir/globalStorage/ms-vscode-remote.remote-containers/imageConfigs"
+  local name_config_dir="$user_dir/globalStorage/ms-vscode-remote.remote-containers/nameConfigs"
   local image_config="$image_config_dir/$IMAGE_CONFIG_NAME"
+  local name_config="$name_config_dir/ghcr.io-sima-neat-elxr-latest.json"
 
-  mkdir -p "$image_config_dir"
+  mkdir -p "$image_config_dir" "$name_config_dir"
 
   log "Registering Palette Neat for attached container $IMAGE_REF..."
-  python3 - "$DEVCONTAINER_TEMPLATE" "$image_config" <<'PY'
+  python3 - "$DEVCONTAINER_TEMPLATE" "$image_config" "$name_config" <<'PY'
 import json
 import pathlib
 import sys
 
 template_path = pathlib.Path(sys.argv[1])
-target_path = pathlib.Path(sys.argv[2])
+target_paths = [pathlib.Path(p) for p in sys.argv[2:]]
 
 template = json.loads(template_path.read_text())
-target = json.loads(target_path.read_text()) if target_path.exists() else {}
-
-target.setdefault("workspaceFolder", "/home/manuel.roldan")
-target.setdefault("customizations", {})
-target["customizations"].setdefault("vscode", {})
-
 template_vscode = template["customizations"]["vscode"]
-target_vscode = target["customizations"]["vscode"]
 
-target_vscode["settings"] = {
-    **target_vscode.get("settings", {}),
-    **template_vscode["settings"],
-}
+for target_path in target_paths:
+    target = json.loads(target_path.read_text()) if target_path.exists() else {}
+    target.setdefault("workspaceFolder", "/home/manuel.roldan")
 
-extensions = [
-    *target_vscode.get("extensions", []),
-    *template_vscode.get("extensions", []),
-    "sima-ai.sima-palette-neat-product-icons",
-]
-target_vscode["extensions"] = list(dict.fromkeys(extensions))
+    # Attached container configs have used both top-level settings/extensions
+    # and customizations.vscode across Dev Containers versions. Write both.
+    target["settings"] = {
+        **target.get("settings", {}),
+        **template_vscode["settings"],
+    }
+    target["extensions"] = list(dict.fromkeys([
+        *target.get("extensions", []),
+        *template_vscode.get("extensions", []),
+        "sima-ai.sima-palette-neat-product-icons",
+    ]))
 
-target_path.write_text(json.dumps(target, indent=2) + "\n")
+    target.setdefault("customizations", {})
+    target["customizations"].setdefault("vscode", {})
+    target_vscode = target["customizations"]["vscode"]
+    target_vscode["settings"] = {
+        **target_vscode.get("settings", {}),
+        **template_vscode["settings"],
+    }
+    target_vscode["extensions"] = list(dict.fromkeys([
+        *target_vscode.get("extensions", []),
+        *template_vscode.get("extensions", []),
+        "sima-ai.sima-palette-neat-product-icons",
+    ]))
+
+    target_path.write_text(json.dumps(target, indent=2) + "\n")
 PY
 }
 
