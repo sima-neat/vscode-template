@@ -1,4 +1,5 @@
 format = """
+$python\
 [░▒▓](#5998DD)\
 [  ](bg:#5998DD fg:#E8E9EB)\
 $username$hostname\
@@ -56,6 +57,13 @@ format = '[[ $symbol ($version) ](fg:#010F0E bg:#D26728)]($style)'
 symbol = ""
 style  = "bg:#D26728"
 format = '[[ $symbol ($version) ](fg:#010F0E bg:#D26728)]($style)'
+
+[python]
+style  = "bold fg:#E8E9EB bg:#5998DD"
+format = '[[ \($virtualenv\) ](fg:#E8E9EB bg:#5998DD)]($style)'
+detect_extensions = []
+detect_files = []
+detect_folders = []
 
 [time]
 disabled    = false
